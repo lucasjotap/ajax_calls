@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <h3>User Management</h3>
+    <input type="text" id="name" placeholder="Name">
+    <input type="email" id="email" placeholder="Email">
+    <button onclick="addUser()">Add User</button>
+
+    <table border="1" id="userTable">
+        <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Action</th></tr></thead>
+        <tbody id="userList"></tbody>
+    </table>
+
+    <script>
+        // READ: Load users on page load
+        async function loadUsers() {
+            const res = await fetch('api.php?action=read');
+            const users = await res.json();
+            const list = document.getElementById('userList');
+            list.innerHTML = users.map(u => `
+                <tr>
+                    <td>${u.id}</td>
+                    <td>${u.name}</td>
+                    <td>${u.email}</td>
+                    <td><button onclick="deleteUser(${u.id})">Delete</button></td>
+                </tr>`).join('');
+        }
+
+        // CREATE: Add new user
+        async function addUser() {
+            const formData = new FormData();
+            formData.append('name', document.getElementById('name').value);
+            formData.append('email', document.getElementById('email').value);
+            
+            await fetch('api.php?action=create', { method: 'POST', body: formData });
+            loadUsers(); // Refresh list
+        }
+
+        // DELETE: Remove user
+        async function deleteUser(id) {
+            await fetch(`api.php?action=delete&id=${id}`);
+            loadUsers();
+        }
+
+        window.onload = loadUsers;
+    </script>
+</body>
+</html>
