@@ -1,15 +1,29 @@
 <?php
 // Reuse your previous connection logic
-$host = 'localhost'; // Use localhost for local PHP -> Docker DB
-$port = '8080';      // The port you mapped in Docker
-$db   = 'postgres';  // Default database name
-$user = 'postgres';  // Default username
-$pass = 'example';
+$host = 'db'; // Use localhost for local PHP -> Docker DB
+$port = '5432';      // The port you mapped in Docker
+$db   = 'blog_db';  // Default database name
+$user = 'user';  // Default username
+$pass = 'password';
 
 $dsn = "pgsql:host=$host;port=$port;dbname=$db;";
 $pdo = new PDO($dsn, $user, $pass, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
 
 $action = $_GET['action'] ?? '';
+
+
+// First create table if not exists
+
+// Create table
+$stmt = $pdo->prepare("CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL
+);");
+
+
+$stmt->execute();
+echo json_encode(['status' => 'success']);
 
 // READ
 if ($action == 'read') {
