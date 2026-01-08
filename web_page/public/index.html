@@ -14,7 +14,7 @@
     <script>
         // READ: Load users on page load
         async function loadUsers() {
-            const res = await fetch('api.php?action=read');
+            const res = await fetch('api/api.php?action=read');
             const users = await res.json();
             const list = document.getElementById('userList');
             list.innerHTML = users.map(u => `
@@ -32,13 +32,13 @@
             formData.append('name', document.getElementById('name').value);
             formData.append('email', document.getElementById('email').value);
             
-            await fetch('api.php?action=create', { method: 'POST', body: formData });
+            await fetch('api/api.php?action=create', { method: 'POST', body: formData });
             loadUsers(); // Refresh list
         }
 
         // DELETE: Remove user
         async function deleteUser(id) {
-            await fetch(`api.php?action=delete&id=${id}`);
+            await fetch(`api/api.php?action=delete&id=${id}`);
             loadUsers();
         }
 

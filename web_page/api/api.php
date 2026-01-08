@@ -23,7 +23,6 @@ $stmt = $pdo->prepare("CREATE TABLE IF NOT EXISTS users (
 
 
 $stmt->execute();
-echo json_encode(['status' => 'success']);
 
 // READ
 if ($action == 'read') {
